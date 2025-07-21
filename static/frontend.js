@@ -18,7 +18,7 @@ async function sendAudioToBackend() {
   const formData = new FormData();
   formData.append('file', audioBlob, 'audio.webm');
 
-  const response = await fetch('/upload-audio', {
+  const response = await fetch('/backend/upload-audio', {
     method: 'POST',
     body: formData
   });
@@ -41,4 +41,7 @@ async function sendAudioToBackend() {
       controller.close();
     }
   });
+
+  const { done, value } = await reader.read();
+  console.log("First chunk received:", value?.length);
 }

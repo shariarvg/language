@@ -2,6 +2,7 @@ import openai
 import time
 import json
 import re
+import os
 
 PROMPT = '''
 You are a native Spanish speaker helping a user practice Spanish conversation. Always reply to the user in Spanish.
@@ -34,8 +35,9 @@ scratchpad_update: [Any grammar or spelling issues here, in English.]
 Only include the scratchpad_update line after the marker. Do not include the marker in the Spanish reply. Do not say anything else outside this format.
 '''
 
-with open("../../key.txt", 'r') as f:
-    api_key = f.read().strip()
+#with open("../../key.txt", 'r') as f:
+#    api_key = f.read().strip()
+api_key = os.environ['OPENAI_KEY']
 
 openai.api_key = api_key
 client = openai.OpenAI(api_key=api_key)
@@ -73,8 +75,8 @@ class Conversation():
         
 
         # Update conversation and scratchpad
-        convo.conversation_history.append({"role": "user", "content": user_input})
-        convo.conversation_history.append({"role": "assistant", "content": response.choices[0].message.content})
+        self.conversation_history.append({"role": "user", "content": user_input})
+        self.conversation_history.append({"role": "assistant", "content": response.choices[0].message.content})
 
         if data.get("scratchpad_update"):
             self.scratchpad.append(data['scratchpad_update'])

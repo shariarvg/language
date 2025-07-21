@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+whisper
+openai
+torch  # whisper depends on PyTorch
+python-multipart  # for UploadFile handling in FastAPI

@@ -6,10 +6,10 @@ from backend import app as backend_app  # import your existing app
 app = FastAPI()
 
 # Mount backend routes
-app.mount("/api", backend_app)
+app.mount("/backend", backend_app)
 
 # Serve static frontend
-app.mount("/static", StaticFiles(directory=".", html=True), name="static")
+app.mount("/static", StaticFiles(directory="static", html=True), name="static")
 
 @app.get("/", response_class=HTMLResponse)
 async def index():
