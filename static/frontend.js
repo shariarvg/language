@@ -30,18 +30,37 @@ async function sendAudioToBackend() {
     async start(controller) {
       while (true) {
         const { done, value } = await reader.read();
-        if (done) break;
+        
         // decode and play streamed audio
         const audioBuffer = await audioContext.decodeAudioData(value.buffer);
         const source = audioContext.createBufferSource();
         source.buffer = audioBuffer;
         source.connect(audioContext.destination);
         source.start();
+        if (done) break;
       }
       controller.close();
     }
   });
+  
+}
 
-  const { done, value } = await reader.read();
-  console.log("First chunk received:", value?.length);
+async function getGPTResponse(prompt) {
+  const response = await fetch('/stream-gpt', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ prompt })
+  });
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder("utf-8");
+  const outputDiv = document.getElementById("gpt-output");
+  outputDiv.textContent = "";  // Clear old content
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    const chunk = decoder.decode(value);
+    outputDiv.textContent += chunk;
+  }
 }
