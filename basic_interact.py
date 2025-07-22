@@ -37,6 +37,7 @@ Only include the scratchpad_update line after the marker. Do not include the mar
 
 #with open("../../key.txt", 'r') as f:
 #    api_key = f.read().strip()
+
 api_key = os.environ['OPENAI_KEY']
 
 openai.api_key = api_key
@@ -48,6 +49,7 @@ class Conversation():
         #self.thread = client.beta.threads.create()
         self.scratchpad = []
         self.conversation_history = [] 
+        self.client = openai.OpenAI(api_key=os.environ['OPENAI_KEY'])
         
     def extract_first_json_block(self, text):
         match = re.search(r'\{.*\}', text, re.DOTALL)

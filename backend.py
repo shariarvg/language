@@ -74,26 +74,30 @@ Only include the scratchpad_update line after the marker. Do not include the mar
 
 conversation = Conversation()
 
-
-@app.post("/stream-gpt")
-async def stream_gpt(file: UploadFile, request: Request):
+@app.post("/transcribe-audio")
+async def transcribe_audio(file: UploadFile, request: Request):
     whisper_model = request.app.state.whisper_model
-    c = request.app.state.convo
 
-    # Save uploaded audio to temp file
     with tempfile.NamedTemporaryFile(delete=False, suffix=".webm") as tmp:
         tmp.write(await file.read())
         tmp_path = tmp.name
 
-    # Transcribe
-    user_input = whisper_model.transcribe(tmp_path)["text"]
+    transcription = whisper_model.transcribe(tmp_path)["text"]
+    return {"text": transcription}
+
+@app.post("/continue-chat")
+async def continue_chat(request: Request):
+    data = await request.json()
+    user_input = data["text"]
+
+    convo = request.app.state.convo
 
     def stream_generator():
         system_prompt = PROMPT_SENTINEL
-        messages = [{"role": "system", "content": system_prompt}] + conversation.conversation_history
+        messages = [{"role": "system", "content": system_prompt}] + convo.conversation_history
         messages.append({"role": "user", "content": user_input})
 
-        stream = conversation.client.chat.completions.create(
+        stream = convo.client.chat.completions.create(
             model="gpt-4",
             messages=messages,
             temperature=0.7,
@@ -108,6 +112,7 @@ async def stream_gpt(file: UploadFile, request: Request):
         for chunk in stream:
             delta = chunk.choices[0].delta
             content = delta.content if delta.content else ""
+            #print(content)
             if not content:
                 continue
 
@@ -115,8 +120,7 @@ async def stream_gpt(file: UploadFile, request: Request):
 
             if "@@@END_OF_ASSISTANT@@@" in buffer:
                 before, after = buffer.split("@@@END_OF_ASSISTANT@@@", 1)
-                assistant_text += before
-                yield before
+                assistant_text = before
                 in_scratchpad = True
                 scratchpad_text += after
                 buffer = ""
@@ -126,13 +130,14 @@ async def stream_gpt(file: UploadFile, request: Request):
                 scratchpad_text += content
             else:
                 assistant_text += content
-                yield content
+                if "@" not in buffer:
+                    yield content
 
-        conversation.conversation_history.append({"role": "user", "content": user_input})
-        conversation.conversation_history.append({"role": "assistant", "content": assistant_text.strip()})
+        convo.conversation_history.append({"role": "user", "content": user_input})
+        convo.conversation_history.append({"role": "assistant", "content": assistant_text.strip()})
 
         match = re.search(r'scratchpad_update:\s*(.*)', scratchpad_text)
         if match:
-            conversation.scratchpad.append(match.group(1).strip())
+            convo.scratchpad.append(match.group(1).strip())
 
     return StreamingResponse(stream_generator(), media_type="text/plain")

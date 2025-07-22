@@ -3,12 +3,41 @@
 <head>
   <title>Spanish Tutor</title>
 </head>
+<style>
+    .user-msg {
+      background-color: #e0f7fa;
+      padding: 10px;
+      border-radius: 10px;
+      margin: 10px 0;
+      max-width: 80%;
+      align-self: flex-end;
+      text-align: right;
+    }
+  
+    .gpt-msg {
+      background-color: #e8eaf6;
+      padding: 10px;
+      border-radius: 10px;
+      margin: 10px 0;
+      max-width: 80%;
+      align-self: flex-start;
+      text-align: left;
+    }
+  
+    #chat-container {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+</style>
+
+
 <body>
   <h2>🎙️ Speak Spanish</h2>
   <button onclick="startRecording()">Start</button>
   <button onclick="stopRecording()">Stop</button>
   <pre id="response"></pre>
   <script src="static/frontend.js"></script>
-  <div id="gpt-output"></div>
+  <div id="chat-container" style="padding: 1rem;"></div>
 </body>
 </html>
