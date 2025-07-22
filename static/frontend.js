@@ -4,7 +4,7 @@ async function startRecording() {
   const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
   mediaRecorder = new MediaRecorder(stream);
   mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-  mediaRecorder.onstop = sendAudioToBackend;
+  mediaRecorder.onstop = getGPTResponse;
   audioChunks = [];
   mediaRecorder.start();
 }
@@ -46,7 +46,7 @@ async function sendAudioToBackend() {
 }
 
 async function getGPTResponse(prompt) {
-  const response = await fetch('/stream-gpt', {
+  const response = await fetch('/backend/stream-gpt', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ prompt })
