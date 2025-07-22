@@ -1,6 +1,7 @@
 let mediaRecorder, audioChunks = [];
 
 async function startRecording() {
+  document.getElementById("recording-indicator").style.display = "inline-block";
   const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
   mediaRecorder = new MediaRecorder(stream);
   mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
@@ -10,6 +11,7 @@ async function startRecording() {
 }
 
 function stopRecording() {
+  document.getElementById("recording-indicator").style.display = "none";
   mediaRecorder.stop();
 }
 

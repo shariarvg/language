@@ -29,11 +29,27 @@
       flex-direction: column;
       gap: 6px;
     }
+    .blinking-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: red;
+        animation: blink 1s infinite;
+        margin-top: 10px;
+    }
+
+    @keyframes blink {
+        0% { opacity: 1; }
+        50% { opacity: 0; }
+        100% { opacity: 1; }
+    }
+
 </style>
 
 
 <body>
   <h2>🎙️ Speak Spanish</h2>
+  <div id="recording-indicator" class="blinking-dot" style="display: none;"></div>
   <button onclick="startRecording()">Start</button>
   <button onclick="stopRecording()">Stop</button>
   <pre id="response"></pre>
