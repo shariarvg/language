@@ -138,6 +138,13 @@ async def continue_chat(request: Request):
 
         match = re.search(r'scratchpad_update:\s*(.*)', scratchpad_text)
         if match:
-            convo.scratchpad.append(match.group(1).strip())
+            scratchpad_update = match.group(1).strip()
+            convo.scratchpad.append(scratchpad_update)
+
+            print(scratchpad_update)
+
+            yield b'\n'  # flush buffer cleanly
+            yield (json.dumps({"scratchpad_update": scratchpad_update}) + "\n").encode("utf-8")
+
 
     return StreamingResponse(stream_generator(), media_type="text/plain")
