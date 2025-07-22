@@ -59,7 +59,7 @@ async def handle_audio(file: UploadFile, request: Request):
 PROMPT_SENTINEL = '''
 You are a native Spanish speaker helping a user practice Spanish conversation. Always reply to the user in Spanish.
 
-Also, you are tracking the user's grammar and spelling mistakes in a scratchpad. After each user input, silently write any grammar or spelling mistakes you detect — in English — to this scratchpad.
+Also, you are tracking the user's grammar and spelling mistakes in a scratchpad. After each user input, silently write any grammar or spelling mistakes you detect — in English — to this scratchpad. 
 
 Respond in the following format:
 
@@ -108,6 +108,7 @@ async def continue_chat(request: Request):
         assistant_text = ""
         scratchpad_text = ""
         in_scratchpad = False
+        all_text = ""
 
         for chunk in stream:
             delta = chunk.choices[0].delta
@@ -116,6 +117,7 @@ async def continue_chat(request: Request):
             if not content:
                 continue
 
+            all_text += content
             buffer += content
 
             if "@@@END_OF_ASSISTANT@@@" in buffer:
@@ -134,12 +136,12 @@ async def continue_chat(request: Request):
                     yield content
 
         convo.conversation_history.append({"role": "user", "content": user_input})
-        convo.conversation_history.append({"role": "assistant", "content": assistant_text.strip()})
+        convo.conversation_history.append({"role": "assistant", "content": all_text.strip()})
 
         match = re.search(r'scratchpad_update:\s*(.*)', scratchpad_text)
         if match:
             scratchpad_update = match.group(1).strip()
-            convo.scratchpad.append(scratchpad_update)
+            convo.scratchpad.append(f"User input: {user_input}\nError:{scratchpad_update}")
 
             print(scratchpad_update)
 
