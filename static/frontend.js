@@ -1,4 +1,69 @@
 let mediaRecorder, audioChunks = [];
+let token = null;
+
+document.getElementById("login-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+
+  const response = await fetch("/token", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    body: new URLSearchParams({
+      username,
+      password
+    })
+  });
+
+  const data = await response.json();
+
+  if (data.access_token) {
+    token = data.access_token;
+    localStorage.setItem("token", data.access_token);
+    const token_retrieved = localStorage.getItem("token");
+    showWelcomeMessage(token_retrieved);
+  } else {
+    alert("Login failed.");
+  }
+});
+
+// ------------------ SIGNUP ------------------
+document.getElementById("signup-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const username = document.getElementById("signup-username").value;
+  const password = document.getElementById("signup-password").value;
+
+  const response = await fetch("/signup", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ username, password })
+  });
+
+  const data = await response.json();
+
+  if (response.ok) {
+    alert("Signup successful! Please log in.");
+    document.getElementById("signup-form").reset();
+  } else {
+    alert("Signup failed: " + (data.detail || "Unknown error"));
+  }
+});
+
+function showWelcomeMessage(username) {
+  document.getElementById("auth-container").style.display = "none";
+  const welcomeDiv = document.getElementById("welcome-message");
+  welcomeDiv.textContent = `Welcome, ${username}`;
+  welcomeDiv.style.display = "block";
+
+  document.getElementById("recording-controls").style.display = "block";
+}
+
+
 
 async function startRecording() {
   document.getElementById("recording-indicator").style.display = "inline-block";
@@ -20,7 +85,7 @@ async function sendAudioToBackend() {
   const formData = new FormData();
   formData.append('file', audioBlob, 'audio.webm');
 
-  const response = await fetch('/backend/upload-audio', {
+  const response = await fetch('/upload-audio', {
     method: 'POST',
     body: formData
   });
@@ -52,7 +117,7 @@ async function getGPTResponse() {
   const formData = new FormData();
   formData.append('file', audioBlob, 'audio.webm');
 
-  const response = await fetch('/backend/stream-gpt', {
+  const response = await fetch('/stream-gpt', {
     method: 'POST',
     body: formData
   });
@@ -75,7 +140,7 @@ async function handleUserAudio() {
   formData.append("file", audioBlob, "audio.webm");
 
   // Step 1: Transcribe user audio
-  const transcriptResponse = await fetch('/backend/transcribe-audio', {
+  const transcriptResponse = await fetch('/transcribe-audio', {
     method: 'POST',
     body: formData
   });
@@ -100,9 +165,9 @@ async function handleUserAudio() {
   chatContainer.appendChild(gptFeedbackDiv)
 
   // Step 4: Stream GPT response
-  const gptResponse = await fetch('/backend/continue-chat', {
+  const gptResponse = await fetch('/continue-chat', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', "Authorization": `Bearer ${token}`},
     body: JSON.stringify({ text: userText })
   });
 
@@ -151,4 +216,23 @@ async function handleUserAudio() {
 
 }
 
+async function saveScratchpad(text) {
+  await fetch("/scratchpad", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify(text)
+  });
+}
 
+async function loadScratchpad() {
+  const res = await fetch("/scratchpad", {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+  const data = await res.json();
+  return data.scratchpad;
+}

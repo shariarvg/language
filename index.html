@@ -60,11 +60,39 @@
 
 <body>
   <h2>🎙️ Speak Spanish</h2>
-  <div id="recording-indicator" class="blinking-dot" style="display: none;"></div>
-  <button onclick="startRecording()">Start</button>
-  <button onclick="stopRecording()">Stop</button>
-  <pre id="response"></pre>
-  <script src="static/frontend.js"></script>
+  <div id="auth-container" style="padding: 1rem;">
+    <h3>🔐 Login</h3>
+    <form id="login-form">
+      <input type="text" id="username" placeholder="Username" required><br><br>
+      <input type="password" id="password" placeholder="Password" required><br><br>
+      <button type="submit">Login</button>
+    </form>
+  
+    <h3>🆕 Sign Up</h3>
+    <form id="signup-form">
+      <input type="text" id="signup-username" placeholder="Username" required><br><br>
+      <input type="password" id="signup-password" placeholder="Password" required><br><br>
+      <button type="submit">Sign Up</button>
+    </form>
+  </div>
+  
+
+  <!-- Recording controls: hidden until login -->
+  <div id="recording-controls" style="display: none; padding: 1rem;">
+    <div id="recording-indicator" class="blinking-dot" style="display: none;"></div>
+    <button onclick="startRecording()">Start</button>
+    <button onclick="stopRecording()">Stop</button>
+    <pre id="response"></pre>
+  </div>
+
+  <div id="welcome-message" style="display: none;"></div>
+
+  <!-- Chat container -->
   <div id="chat-container" style="padding: 1rem;"></div>
+
+  <a href="/history"><button>📜 View Past Conversations</button></a>
+
+  <!-- JS -->
+  <script src="static/frontend.js"></script>
 </body>
 </html>
