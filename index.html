@@ -1,84 +1,34 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
   <title>Spanish Tutor</title>
+  <link rel="stylesheet" href="static/styles.css" />
 </head>
-<style>
-    .user-msg {
-      background-color: #e0f7fa;
-      padding: 10px;
-      border-radius: 10px;
-      margin: 6px 0 10px 0;
-      max-width: 50%;
-      align-self: flex-end;
-      text-align: right;
-    }
-  
-    .gpt-msg {
-      background-color: #e8eaf6;
-      padding: 10px;
-      border-radius: 10px;
-      margin: 6px 0 10px 0;
-      max-width: 50%;
-      align-self: flex-start;
-      text-align: left;
-    }
-
-    .feedback-msg{
-      background-color: #ff0000;
-      padding: 10px;
-      border-radius: 10px;
-      margin: 0 0 10px 0;
-      max-width: 50%;
-      align-self: flex-start;
-      text-align: left;
-      color: white;
-    }
-  
-    #chat-container {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .blinking-dot {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        background-color: red;
-        animation: blink 1s infinite;
-        margin-top: 10px;
-    }
-
-    @keyframes blink {
-        0% { opacity: 1; }
-        50% { opacity: 0; }
-        100% { opacity: 1; }
-    }
-
-</style>
-
-
 <body>
-  <h2>🎙️ Speak Spanish</h2>
-  <div id="auth-container" style="padding: 1rem;">
-    <h3>🔐 Login</h3>
-    <form id="login-form">
-      <input type="text" id="username" placeholder="Username" required><br><br>
-      <input type="password" id="password" placeholder="Password" required><br><br>
-      <button type="submit">Login</button>
-    </form>
-  
-    <h3>🆕 Sign Up</h3>
-    <form id="signup-form">
-      <input type="text" id="signup-username" placeholder="Username" required><br><br>
-      <input type="password" id="signup-password" placeholder="Password" required><br><br>
-      <button type="submit">Sign Up</button>
-    </form>
-  </div>
-  
+  <h2 class="title">🎙️ Speak Spanish</h2>
 
-  <!-- Recording controls: hidden until login -->
-  <div id="recording-controls" style="display: none; padding: 1rem;">
+  <div id = 'auth-container' class="auth-wrapper">
+    <div class="auth-card">
+      <h3>🔐 Login</h3>
+      <form id="login-form">
+        <input type="text" id="username" placeholder="Username" required><br>
+        <input type="password" id="password" placeholder="Password" required><br>
+        <button type="submit">Login</button>
+      </form>
+    </div>
+
+    <div class="auth-card">
+      <h3>🆕 Sign Up</h3>
+      <form id="signup-form">
+        <input type="text" id="signup-username" placeholder="Username" required><br>
+        <input type="password" id="signup-password" placeholder="Password" required><br>
+        <button type="submit">Sign Up</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="recording-controls" style="display: none;">
     <div id="recording-indicator" class="blinking-dot" style="display: none;"></div>
     <button onclick="startRecording()">Start</button>
     <button onclick="stopRecording()">Stop</button>
@@ -86,13 +36,12 @@
   </div>
 
   <div id="welcome-message" style="display: none;"></div>
+  <div id="chat-container"></div>
 
-  <!-- Chat container -->
-  <div id="chat-container" style="padding: 1rem;"></div>
+  <div id="pastconvo" style="display: none;">
+    <a href="/history"><button>📜 View Past Conversations</button></a>
+  </div>
 
-  <a href="/history"><button>📜 View Past Conversations</button></a>
-
-  <!-- JS -->
   <script src="static/frontend.js"></script>
 </body>
 </html>

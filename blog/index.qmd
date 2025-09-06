@@ -39,3 +39,6 @@ just prompting gpt-4 to be your Spanish tutor. I'll lay out a few differences, w
  which should be the heart of any language-practice experience. Imagine if Duolingo's personalized features didn't
  just tailor practices to the mistakes you've made while using the app, but also the strengths and weaknesses you 
  exhibit in daily conversation. 
+
+ With this in mind, I set out to create a language app that was conversation-first and maintains persistent memory of user
+ strengths and weaknesses.  

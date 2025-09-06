@@ -23,7 +23,7 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
     token = data.access_token;
     localStorage.setItem("token", data.access_token);
     const token_retrieved = localStorage.getItem("token");
-    showWelcomeMessage(token_retrieved);
+    showWelcomeMessage(username);
   } else {
     alert("Login failed.");
   }
@@ -61,6 +61,7 @@ function showWelcomeMessage(username) {
   welcomeDiv.style.display = "block";
 
   document.getElementById("recording-controls").style.display = "block";
+  document.getElementById("pastconvo").style.display = "block";
 }
 
 
@@ -154,6 +155,16 @@ async function handleUserAudio() {
   userMsgDiv.className = "user-msg";
   userMsgDiv.innerText = userText;
   chatContainer.appendChild(userMsgDiv);
+
+  rerecord = document.createElement("span");
+  rerecord.innerText = "Re-record";
+  rerecord.style.cursor = "pointer";
+  rerecord.style.marginLeft = "8px";
+  rerecord.onclick = () => {
+    gptFeedbackDiv.innerText = maybeJson.scratchpad_update;
+    gptFeedbackDiv.style.display = "inline";
+  };
+  userMsgDiv.appendChild(rerecord);
 
   // Step 3: Create GPT placeholder message
   const gptMsgDiv = document.createElement("div");

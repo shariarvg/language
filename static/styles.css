@@ -1,0 +1,118 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to right, #fceabb, #f8b500);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .title {
+    color: #fff;
+    text-shadow: 2px 2px #ff4081;
+    margin-top: 2rem;
+    font-size: 2rem;
+  }
+  
+  .auth-wrapper {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .auth-card {
+    background: linear-gradient(145deg, #ffd5ec, #fff1f9);
+    box-shadow: 0 8px 20px rgba(255, 105, 180, 0.3);
+    padding: 2rem;
+    border-radius: 20px;
+    width: 260px;
+    text-align: center;
+    border: 2px solid #ff69b4;
+  }
+  
+  .auth-card input {
+    width: 90%;
+    padding: 0.6rem;
+    margin: 0.5rem 0;
+    border: 2px solid #ff69b4;
+    border-radius: 10px;
+    font-size: 1rem;
+  }
+  
+  .auth-card button {
+    background-color: #ff69b4;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .auth-card button:hover {
+    background-color: #ff4081;
+  }
+  
+  #recording-controls {
+    margin-top: 2rem;
+  }
+  
+  .blinking-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: red;
+    animation: blink 1s infinite;
+    margin-top: 10px;
+  }
+  
+  @keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  
+  #chat-container {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 1rem;
+    width: 90%;
+    max-width: 600px;
+  }
+  
+  .user-msg {
+    background-color: #c8e6c9;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 6px 0 10px 0;
+    max-width: 60%;
+    align-self: flex-end;
+    text-align: right;
+  }
+  
+  .gpt-msg {
+    background-color: #d1c4e9;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 6px 0 10px 0;
+    max-width: 60%;
+    align-self: flex-start;
+    text-align: left;
+  }
+  
+  .feedback-msg {
+    background-color: #ff1744;
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 0 0 10px 0;
+    max-width: 60%;
+    align-self: flex-start;
+    text-align: left;
+  }
+  
